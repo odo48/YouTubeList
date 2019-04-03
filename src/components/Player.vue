@@ -10,11 +10,11 @@
       </div>
     </div>
     <div class="video-container">
-      <div v-for="info in infoList" :key="info.index" class="video-list" @click="playVid(info)">
+      <div v-for="info in infoList" :key="info.index" class="video-list" >
         <div class="info-play">{{info.play}}</div>
-        <div class="info-video">
-          <img :src="info.thumbnail">
-          <div class="info-title col-lg-7" v-bind:class="{playing: playing}">{{info.title}}</div>
+        <div class="info-video" >
+          <img :src="info.thumbnail" @click="playVid(info)">
+          <div class="info-title col-lg-7" @click="playVid(info)">{{info.title}}</div>
           <button class="btn btn-delete btn-outline-danger" @click="deleteVid(info.index)"><i class="fa fa-trash" aria-hidden="true"></i></button>
         </div>
       </div>
@@ -51,7 +51,6 @@ export default {
         this.infoList[i].play = ''
       }
       this.infoList[info.index].play = 'Now playing'
-      console.log
     },
     youtubeParser(url) {
       var YT = window.YT.get('player')
@@ -117,6 +116,10 @@ export default {
           for(var i = 0; i < tmp.idList.length-1 ; i++) {
             if(idUrl === tmp.idList[i]) {
               idUrl = tmp.idList[i+1]
+              for (var j = 0; j < tmp.infoList.length; j++){
+                tmp.infoList[j].play = ''
+              }
+              tmp.infoList[i+1].play = 'Now playing'
               player.loadVideoById(idUrl)
               return 
             }
@@ -182,14 +185,15 @@ export default {
   flex-direction: column;
   padding-bottom: 16px;
   width: 100%;
-  cursor: pointer;
 }
 .info-title {
   text-align: left;
+  cursor: pointer;
 }
 .info-video {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 .info-play {
   width: 100%;
