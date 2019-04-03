@@ -11,10 +11,12 @@
     </div>
     <div class="video-container">
       <div v-for="info in infoList" :key="info.index" class="video-list" @click="playVid(info)">
-        <div>{{info.play}}</div>
-        <img :src="info.thumbnail">
-        <div class="info-title col-lg-7" v-bind:class="{playing: playing}">{{info.title}}</div>
-        <button class="btn btn-delete btn-outline-danger" @click="deleteVid(info.index)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+        <div class="info-play">{{info.play}}</div>
+        <div class="info-video">
+          <img :src="info.thumbnail">
+          <div class="info-title col-lg-7" v-bind:class="{playing: playing}">{{info.title}}</div>
+          <button class="btn btn-delete btn-outline-danger" @click="deleteVid(info.index)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+        </div>
       </div>
     </div>
   </div>
@@ -45,6 +47,11 @@ export default {
     playVid(info) {
       var YT = window.YT.get('player')
       YT.loadVideoById(info.id)
+      for (var i = 0; i < this.infoList.length; i++){
+        this.infoList[i].play = ''
+      }
+      this.infoList[info.index].play = 'Now playing'
+      console.log
     },
     youtubeParser(url) {
       var YT = window.YT.get('player')
@@ -64,7 +71,7 @@ export default {
       var id = this.thisId
       this.idList.push(this.thisId)
       var thumbnail = (('http://img.youtube.com/vi/' + this.thisId + '/1.jpg').toString())
-      var Url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' +this.thisId + '&fields=items(id%2Csnippet)&key=AIzaSyDno0WtmfofiC9p2CeEAhhzjtVY36teiBE'
+      var Url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + this.thisId + '&fields=items(id%2Csnippet)&key=AIzaSyDno0WtmfofiC9p2CeEAhhzjtVY36teiBE'
       fetch(Url)
         .then(data => {
           return data.json()
@@ -78,6 +85,9 @@ export default {
             'title': title,
             'play': ''
           })
+          if(this.infoList.length === 1){
+            this.infoList[0].play = 'Now Playing'
+          }
         })
     },
     onYouTubeIframeAPIReady(idUrl) {
@@ -160,7 +170,6 @@ export default {
   font-weight: bold;
   display: flex;
   flex-direction: column;
-  align-items: center;
   height: 82vh;
   overflow: auto;
   padding-top: 26px;
@@ -170,6 +179,7 @@ export default {
   display: flex;
   align-items: center;
   border-bottom: 2px solid #00000045;
+  flex-direction: column;
   padding-bottom: 16px;
   width: 100%;
   cursor: pointer;
@@ -177,7 +187,14 @@ export default {
 .info-title {
   text-align: left;
 }
-.playing {
-  color: red;
+.info-video {
+  display: flex;
+  align-items: center;
+}
+.info-play {
+  width: 100%;
+  text-align: start;
+  font-size: 12px;
+  color: #0000007d;
 }
 </style>
