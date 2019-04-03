@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Player msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Player from './components/Player.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    Player
   }
 }
 </script>
@@ -22,6 +22,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  height: 100vh;
+  background: #f9f9f9;
 }
 </style>
