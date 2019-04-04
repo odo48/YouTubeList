@@ -14,9 +14,9 @@
         <div class="info-play">{{info.play}}</div>
         <div class="info-video" >
           <img :src="info.thumbnail" @click="playVid(info)">
-          <div class="info-title col-lg-7" @click="playVid(info)">{{info.title}}</div>
           <button class="btn btn-delete btn-outline-danger" @click="deleteVid(info.index)"><i class="fa fa-trash" aria-hidden="true"></i></button>
         </div>
+        <div class="info-title" @click="playVid(info)">{{info.title}}</div>
       </div>
     </div>
   </div>
@@ -53,6 +53,7 @@ export default {
       this.infoList[info.index].play = 'Now playing'
     },
     youtubeParser(url) {
+      var YT = window.YT.get('player')
       var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/
       this.match = url.match(regExp)
       if (this.match&&this.match[7].length === 11) {
@@ -208,11 +209,14 @@ export default {
 .info-title {
   text-align: left;
   cursor: pointer;
+  width: 100%;
 }
 .info-video {
   display: flex;
   align-items: center;
-  cursor: pointer;
+  cursor: pointer;  
+  width: 100%;
+  justify-content: space-between;
 }
 .info-play {
   width: 100%;
@@ -220,4 +224,17 @@ export default {
   font-size: 12px;
   color: #0000007d;
 }
+@media (max-width: 1440px) and (min-width: 1025px) { 
+  /deep/ #player {
+    width: 854px !important;
+    height: 480px !important;
+  }
+}
+@media (max-width: 1024px){
+  /deep/ #player {
+    width: 640px !important;
+    height: 360px !important;
+  }
+}
+
 </style>
