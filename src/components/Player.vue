@@ -2,7 +2,7 @@
   <div class="wtube-container col-lg-12 col-md-12">
     <div class="search-player-container col-lg-9">
       <div class="search-container">
-        <input class="col-lg-9 search" placeholder="Insert Youtube URL" ref="inputVideo">
+        <input class="col-lg-9 search" placeholder="Insert YouTube URL" ref="inputVideo">
         <button class="btn-play btn btn-danger" @click="addVideo()"><i class="fas fa-search"></i></button>
       </div>
       <div class="player-container col-lg-9">
@@ -53,16 +53,16 @@ export default {
       this.infoList[info.index].play = 'Now playing'
     },
     youtubeParser(url) {
-      var YT = window.YT.get('player')
       var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/
       this.match = url.match(regExp)
       if (this.match&&this.match[7].length === 11) {
         if (this.thisId === null) {
           this.addInfo()
-          this.onYouTubeIframeAPIReady(this.thisId)
+          this.onYouTubeIframeAPIReady()
         } else {
           this.addInfo()
         }
+      this.$refs.inputVideo.value = ''
       } 
     },
     addInfo() {
@@ -89,13 +89,13 @@ export default {
           }
         })
     },
-    onYouTubeIframeAPIReady(idUrl) {
+    onYouTubeIframeAPIReady() {
       var YT = window.YT
       var tmp = this
       var player = new YT.Player('player', {
         height: '720', 
         width: '1280',
-        videoId: idUrl,
+        videoId: tmp.thisId,
         playerVars: {
           'rel': 0,
           'enablejsapi': 1,
@@ -110,17 +110,17 @@ export default {
         event.target.playVideo()
       }
       function onPlayerStateChange(event) {
-        if (event.data === YT.PlayerState.PLAYING) {
-        } else if (event.data === YT.PlayerState.ENDED) {
+        var idPlaying = event.target.l.videoData.video_id
+        if (event.data === YT.PlayerState.ENDED) {
           window.idList = tmp.idList
           for(var i = 0; i < tmp.idList.length-1 ; i++) {
-            if(idUrl === tmp.idList[i]) {
-              idUrl = tmp.idList[i+1]
+            if(idPlaying === tmp.idList[i]) {
+              idPlaying = tmp.idList[i+1]
               for (var j = 0; j < tmp.infoList.length; j++){
                 tmp.infoList[j].play = ''
               }
               tmp.infoList[i+1].play = 'Now playing'
-              player.loadVideoById(idUrl)
+              player.loadVideoById(idPlaying)
               return 
             }
           }
@@ -140,6 +140,25 @@ export default {
 }
 </script>
 <style scoped>
+
+::-webkit-scrollbar {
+    border-radius: 10px;
+    width: 10px ;
+    background-color: rgba(187, 130, 130, 0)
+}
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.397);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #999999;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #727272;
+}
 .wtube-container{
   display: flex;
   margin: 0 auto;
@@ -184,7 +203,7 @@ export default {
   border-bottom: 2px solid #00000045;
   flex-direction: column;
   padding-bottom: 16px;
-  width: 100%;
+  width: 95%;
 }
 .info-title {
   text-align: left;
